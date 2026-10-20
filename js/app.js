@@ -1,5 +1,27 @@
 "use strict";
 
+import {films} from"./data.js"
+
+const filmcontainer = document.getElementById("films-container");
+
+
+
+for (let i = 0; i < films.length; i++)
+{
+    var createarticle = document.createElement('article');
+    createarticle.setAttribute('class','overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg')
+    createarticle.setAttribute('data-film-id',`${i+1}`);
+
+
+var firstdiv = ` <div class="relative"><img src="${films[i].affiche}" alt="Affiche de ${films[i].titre} class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix}</span></div>`;
+var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Thriller</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700">Choisir ce film</button></div>`;
+
+createarticle.innerHTML= firstdiv + seconddiv;
+
+filmcontainer.appendChild(createarticle);
+}
+
+
 // Bienvenue dans le fichier de travail principal de CineBook !
 // Le HTML et les données sont prêts, mais les interactions sont volontairement absentes.
 // La page contient déjà un exemple statique complet pour montrer le résultat attendu.

@@ -4,8 +4,6 @@ import {films} from"./data.js"
 
 const filmcontainer = document.getElementById("films-container");
 
-
-
 for (let i = 0; i < films.length; i++)
 {
     var createarticle = document.createElement('article');
@@ -14,12 +12,62 @@ for (let i = 0; i < films.length; i++)
 
 
 var firstdiv = ` <div class="relative"><img src="${films[i].affiche}" alt="Affiche de ${films[i].titre} class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix}</span></div>`;
-var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Thriller</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700">Choisir ce film</button></div>`;
+var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Thriller</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 film_selectionner " id=${films[i].id}>Choisir ce film</button></div>`;
 
 createarticle.innerHTML= firstdiv + seconddiv;
 
 filmcontainer.appendChild(createarticle);
 }
+
+
+//selection section
+
+const button_click = document.querySelectorAll(".film_selectionner");
+const film_selection = document.querySelector("#selectedMovie");
+const film_seaance = document.querySelector("#selectedMovieSeance");
+let FilmSelectedListe =[];
+button_click.forEach((btn) => {
+     btn.addEventListener("click", function(){
+        let buttonid = Number(btn.id);
+      if (FilmSelectedListe.includes(buttonid)) {
+            return; 
+        }
+        FilmSelectedListe.push(buttonid);
+        btn.classList.replace("bg-slate-50","bg-cine-red");
+        btn.innerText = "selectione";
+        
+       
+       
+       const filmselected = films.find((Element) => Element.id == buttonid) 
+       const filmcard = document.createElement("div");
+      
+       filmcard.setAttribute(
+        "class", "mt-6 grid gap-5 rounded-2xl bg-salte-50 p-5 sm:grid-cols-[100px_1fr]",);
+       filmcard.setAttribute("id","filminfo");
+
+        const film_card_show = `<img src="${filmselected.affiche}" alt="${filmselected.titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">`;
+        
+        const film_card_info = ` <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-xl font-black">${filmselected.titre}</h3><span
+                    class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">${filmselected.prix}</span>
+                </div>
+                <p class="mt-2 text-sm font-semibold text-slate-500">${filmselected.genre}· ${filmselected.duree}</p>
+                <p class="mt-3 leading-7 text-slate-600">${filmselected.description}</p>
+              </div>`;
+
+
+                filmcard.innerHTML = film_card_show + film_card_info ;
+                film_selection.appendChild(filmcard);
+            
+    })
+
+})
+
+
+
+
+
 
 
 // Bienvenue dans le fichier de travail principal de CineBook !

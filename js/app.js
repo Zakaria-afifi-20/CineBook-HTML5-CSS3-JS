@@ -1,22 +1,19 @@
 "use strict";
 
-import {films} from"./data.js"
-
 const filmcontainer = document.getElementById("films-container");
 
-for (let i = 0; i < films.length; i++)
-{
-    var createarticle = document.createElement('article');
-    createarticle.setAttribute('class','overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg')
-    createarticle.setAttribute('data-film-id',`${i+1}`);
+for (let i = 0; i < films.length; i++) {
+  var createarticle = document.createElement('article');
+  createarticle.setAttribute('class', 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg')
+  createarticle.setAttribute('data-film-id', `${i + 1}`);
 
 
-var firstdiv = ` <div class="relative"><img src="${films[i].affiche}" alt="Affiche de ${films[i].titre} class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix}</span></div>`;
-var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red">Thriller</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 film_selectionner " id=${films[i].id}>Choisir ce film</button></div>`;
+  var firstdiv = ` <div class="relative"><img src="${films[i].affiche}" alt="Affiche de ${films[i].titre} class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix}</span></div>`;
+  var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red"> ${films[i].genre}</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 film_selectionner " id=${films[i].id} data-checked="0">Choisir ce film</button></div>`;
 
-createarticle.innerHTML= firstdiv + seconddiv;
+  createarticle.innerHTML = firstdiv + seconddiv;
 
-filmcontainer.appendChild(createarticle);
+  filmcontainer.appendChild(createarticle);
 }
 
 
@@ -25,42 +22,71 @@ filmcontainer.appendChild(createarticle);
 const button_click = document.querySelectorAll(".film_selectionner");
 const film_selection = document.querySelector("#selectedMovie");
 const film_seaance = document.querySelector("#selectedMovieSeance");
-let FilmSelectedListe =[];
+let FilmSelectedListe = [];
+
 button_click.forEach((btn) => {
-     btn.addEventListener("click", function(){
-        let buttonid = Number(btn.id);
-      if (FilmSelectedListe.includes(buttonid)) {
-            return; 
-        }
-        FilmSelectedListe.push(buttonid);
-        btn.classList.replace("bg-slate-50","bg-cine-red");
-        btn.innerText = "selectione";
-        
-       
-       
-       const filmselected = films.find((Element) => Element.id == buttonid) 
-       const filmcard = document.createElement("div");
-      
-       filmcard.setAttribute(
-        "class", "mt-6 grid gap-5 rounded-2xl bg-salte-50 p-5 sm:grid-cols-[100px_1fr]",);
-       filmcard.setAttribute("id","filminfo");
+  btn.addEventListener("click", function (e) {
+    console.log(e.target.dataset.checked);
+    let buttonid = Number(btn.id);
+    if (e.target.dataset.checked == 0) {
 
-        const film_card_show = `<img src="${filmselected.affiche}" alt="${filmselected.titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">`;
-        
-        const film_card_info = ` <div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <h3 class="text-xl font-black">${filmselected.titre}</h3><span
-                    class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">${filmselected.prix}</span>
-                </div>
-                <p class="mt-2 text-sm font-semibold text-slate-500">${filmselected.genre}· ${filmselected.duree}</p>
-                <p class="mt-3 leading-7 text-slate-600">${filmselected.description}</p>
-              </div>`;
+      FilmSelectedListe.push(buttonid);
+      btn.classList.replace("bg-slate-50", "bg-cine-red");
+      btn.innerText = "selectione";
+      e.target.dataset.checked = 1;
+      selectedfilm()
+     console.table(FilmSelectedListe)
+
+    } else {
+      let ind = FilmSelectedListe.indexOf(parseInt(btn.id));
+      FilmSelectedListe.splice(ind, 1)
+      btn.classList.replace("bg-cine-red", "bg-slate-50");
+      btn.innerText = "Choisir ce film";
+      e.target.dataset.checked = 0;
+      selectedfilm()
+      console.table(FilmSelectedListe)
+    }
 
 
-                filmcard.innerHTML = film_card_show + film_card_info ;
-                film_selection.appendChild(filmcard);
-            
-    })
+    const filmselected = films.find((Element) => Element.id == buttonid)
+    const filmcard = document.createElement("div");
+
+    function selectedfilm() {
+      console.log();
+      if (FilmSelectedListe.length === 0) {
+        film_selection.innerHTML = `
+        <p class="mb-1 text-[.7rem] font-extrabold uppercase tracking-[.2em] text-cine-red">Étape 1</p>
+            <h2 id="details-title" class="text-2xl font-black tracking-tight sm:text-3xl">Votre film</h2>`
+      } else {
+        film_selection.innerHTML = `
+        <p class="mb-1 text-[.7rem] font-extrabold uppercase tracking-[.2em] text-cine-red">Étape 1</p>
+            <h2 id="details-title" class="text-2xl font-black tracking-tight sm:text-3xl">Votre film</h2>`
+        FilmSelectedListe.forEach((idFilm) => {
+          const f = films.find(film => film.id == idFilm)
+          console.log(f);
+          
+          
+          const film_selection = document.querySelector("#selectedMovie");
+          film_selection.innerHTML += `
+          <div class="mt-6 grid gap-5 rounded-2xl bg-salte-50 p-5 sm:grid-cols-[100px_1fr]">
+          <img src="${f.affiche}" alt="${f.titre}" class="aspect-[2/3] w-24 rounded-xl object-cover shadow-md">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="text-xl font-black">${f.titre}</h3>
+              <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">${f.prix}</span>
+            </div>
+            <p class="mt-2 text-sm font-semibold text-slate-500">${f.genre}· ${f.duree}</p>
+            <p class="mt-3 leading-7 text-slate-600">${f.description}</p>
+          </div>
+          </div>
+          `
+        })
+
+      }
+
+    }
+
+  })
 
 })
 

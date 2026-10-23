@@ -2,14 +2,26 @@
 
 const filmcontainer = document.getElementById("films-container");
 
+ let duration = "";
+
+function timeconvert(film){
+
+  let H = parseInt(film.duree / 60)
+  let min = film.duree % 60;
+
+   duration =` ${H} H ${min} min `;
+  return duration;
+
+}
+
 for (let i = 0; i < films.length; i++) {
   var createarticle = document.createElement('article');
   createarticle.setAttribute('class', 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg')
   createarticle.setAttribute('data-film-id', `${i + 1}`);
-
+  
 
   var firstdiv = ` <div class="relative"><img src="${films[i].affiche}" alt="Affiche de ${films[i].titre} class="aspect-[2/3] w-full object-cover"><span class="absolute bottom-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold shadow-lg">${films[i].prix}</span></div>`;
-  var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red"> ${films[i].genre}</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">1 h 48 min</p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 film_selectionner " id=${films[i].id} data-checked="0">Choisir ce film</button></div>`;
+  var seconddiv = `<div class="p-4"><p class="text-xs font-bold uppercase tracking-wider text-cine-red"> ${films[i].genre}</p><h3 class="mt-1 text-lg font-black">${films[i].titre}</h3><p class="mt-2 text-sm text-slate-500">${timeconvert(films[i])}  </p><button type="button" class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-extrabold text-slate-700 film_selectionner " id=${films[i].id} data-checked="0">Choisir ce film</button></div>`;
 
   createarticle.innerHTML = firstdiv + seconddiv;
 
@@ -44,15 +56,14 @@ button_click.forEach((btn) => {
       btn.innerText = "Choisir ce film";
       e.target.dataset.checked = 0;
       selectedfilm()
-      console.table(FilmSelectedListe)
     }
+
 
 
     const filmselected = films.find((Element) => Element.id == buttonid)
     const filmcard = document.createElement("div");
 
     function selectedfilm() {
-      console.log();
       if (FilmSelectedListe.length === 0) {
         film_selection.innerHTML = `
         <p class="mb-1 text-[.7rem] font-extrabold uppercase tracking-[.2em] text-cine-red">Étape 1</p>
@@ -61,11 +72,10 @@ button_click.forEach((btn) => {
         film_selection.innerHTML = `
         <p class="mb-1 text-[.7rem] font-extrabold uppercase tracking-[.2em] text-cine-red">Étape 1</p>
             <h2 id="details-title" class="text-2xl font-black tracking-tight sm:text-3xl">Votre film</h2>`
+
         FilmSelectedListe.forEach((idFilm) => {
           const f = films.find(film => film.id == idFilm)
-          console.log(f);
-          
-          
+              
           const film_selection = document.querySelector("#selectedMovie");
           film_selection.innerHTML += `
           <div class="mt-6 grid gap-5 rounded-2xl bg-salte-50 p-5 sm:grid-cols-[100px_1fr]">
@@ -75,7 +85,7 @@ button_click.forEach((btn) => {
               <h3 class="text-xl font-black">${f.titre}</h3>
               <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">${f.prix}</span>
             </div>
-            <p class="mt-2 text-sm font-semibold text-slate-500">${f.genre}· ${f.duree}</p>
+            <p class="mt-2 text-sm font-semibold text-slate-500">${f.genre}· ${timeconvert(f)}</p>
             <p class="mt-3 leading-7 text-slate-600">${f.description}</p>
           </div>
           </div>
